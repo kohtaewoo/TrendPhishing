@@ -1,6 +1,6 @@
 # 대용량 데이터를 활용한 RDBMS 파티셔닝 프로젝트
 
-**가상의 보이스피싱 신고 데이터를 활용한** 파티셔닝 전략에 따른 대용량 데이터의 쿼리 실행 속도 분석을 위한 프로젝트입니다.
+> **가상의 보이스피싱 신고 데이터를 활용한** 파티셔닝 전략에 따른 대용량 데이터의 쿼리 실행 속도 분석을 위한 프로젝트입니다.
 
 ## 👥 팀 소개
 | <img width="150px" src="https://avatars.githubusercontent.com/u/52108628?v=4"/>  | <img width="150px" src="https://avatars.githubusercontent.com/u/45265805?v=4"/> | <img width="150px" src="https://avatars.githubusercontent.com/u/81912226?v=4"> | <img width="150px" src="https://avatars.githubusercontent.com/u/188286798?v=4"> | 
@@ -42,12 +42,20 @@
 #### 1. 📆 **Range 파티셔닝** (`발생 연도` 기준)
 
 - `신고 연도`를 2018~2024년까지를 각 연도별로 파티셔닝
+  
 - **시간 흐름에 따라 증가**하는 데이터에 적합
 
 #### 2. 📍 **List 파티셔닝** (`지역` 기준)
 
 - `신고 지역`을 `서울`, `부산`, `경기` 등 주요 지역별로 파티셔닝
+  
 - **분포가 균등**한 데이터에 적합
+
+#### 3. 🧮 Hash 파티셔닝 (`id` 기준)
+
+- 파티션 키를 균등하게 분산하여 데이터 쏠림 없이 저장 가능
+
+- **특정 기준으로 나누기 모호**한 데이터에 적합
 
 ## 📁 데이터 소개
 
@@ -112,7 +120,7 @@ FROM INFORMATION_SCHEMA.PARTITIONS
 WHERE TABLE_NAME = 'phishing_range_partitioned';
 ```
 
-생성된 리스트 파티션을 확인하면 다음과 같다.
+생성된 리스트 파티션을 확인하면 다음과 같습니다.
 
 <img width="594" height="287" alt="image" src="https://github.com/user-attachments/assets/bf78962c-1713-4c93-b8de-1ca758654dbe" />
 
@@ -199,7 +207,7 @@ FROM INFORMATION_SCHEMA.PARTITIONS
 WHERE TABLE_NAME = 'phishing_range_partitioned';
 ```
 
-생성된 해쉬 파티션을 확인하면 다음과 같다.
+생성된 해쉬 파티션을 확인하면 다음과 같습니다.
 
 <img width="558" height="229" alt="Image" src="https://github.com/user-attachments/assets/2d46b862-6c2b-4f80-9c7b-352c0134c31e" />
 
@@ -447,9 +455,9 @@ WHERE year = 2020
 
 1. **MySQL에서 연관 관계의 테이블 2개에 대해 파티셔닝 불가능**
 
-- 문제 : 참조 무결성 유지 로직이 파티셔닝 엔진과 충돌하기 때문에 여러 테이블들에 대해 파티셔닝 불가능. 연관 관계에 있는 테이블에 대해서 전체 테이블 단위로 외래키 검증이 수행되어야 한다.
+- 문제 : 참조 무결성 유지 로직이 파티셔닝 엔진과 충돌하기 때문에 여러 테이블들에 대해 파티셔닝 불가능. 연관 관계에 있는 테이블에 대해서 전체 테이블 단위로 외래키 검증이 수행되어야 합니다.
 
-	그러나 MySQL의 파티셔닝 엔진은 각 파티션을 독립적으로 관리하므로 외래키 제약 조건을 지원할 수 없다.
+	그러나 MySQL의 파티셔닝 엔진은 각 파티션을 독립적으로 관리하므로 외래키 제약 조건을 지원할 수 없습니다.
 
 - 해결책 : 기존 테이블을 2개에서 1개로 통합
 
@@ -457,7 +465,7 @@ WHERE year = 2020
 
 - 문제 : CREATE로 생성한 테이블에 대해 ALTER로 파티션 추가 불가
 
-- 원인 : MySQL의 RANGE, LIST 파티셔닝은 정적 방식으로 이루어진다. 따라서 파티셔닝 후 동적으로 파티션을 추가할 수 없다.
+- 원인 : MySQL의 RANGE, LIST 파티셔닝은 정적 방식으로 이루어집니다. 따라서 파티셔닝 후 동적으로 파티션을 추가할 수 없습니다.
 
 - 해결책 : 파티셔닝 테이블 생성 시 파티셔닝을 함께 수행하고 원본 테이블에서 데이터 복사
 
@@ -473,7 +481,7 @@ FROM phishing_list_partitioned
 WHERE region = '서울특별시';
 ```
 
-위 쿼리를 예시로 들자면, `SQL_NO_CACHE` 키워드를 추가하지 않으면 실행 시간이 점차 줄어들어 5번째 실행 시 0.645초가 기록되었다. 반면 `SQL_NO_CACHE` 키워드를 추가하면 모든 실행에서 약 1.14초대로 기록되었다. 
+위 쿼리를 예시로 들자면, `SQL_NO_CACHE` 키워드를 추가하지 않으면 실행 시간이 점차 줄어들어 5번째 실행 시 0.645초가 기록되었습니다. 반면 `SQL_NO_CACHE` 키워드를 추가하면 모든 실행에서 약 1.14초대로 기록되었습니다. 
 
 ### Promethemus 연동
 
@@ -485,7 +493,7 @@ WHERE region = '서울특별시';
     
     ```
     
-    서비스가 `Active: failed (Result: exit-code)`로 구동되지 않음.
+    서비스가 `Active: failed (Result: exit-code)`로 구동되지 않습니다.
 
 - 해결책 :
   	### **`EnvironmentFile` 방식**
