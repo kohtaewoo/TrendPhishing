@@ -175,7 +175,7 @@ WHERE year = 2020;
 <details>
 <summary><strong>📌 파티셔닝 전</strong></summary>
 
-![스크린샷 2025-07-11 103950.png](attachment:9b1605d4-38a9-42c9-aca5-89f4208466c6)
+<img width="906" height="262" alt="Image" src="https://github.com/user-attachments/assets/4f7632a2-a684-4afb-b9cf-20a2487db18c" />
 
 ⏱ 실행 시간: **1.731초**
 
@@ -184,7 +184,7 @@ WHERE year = 2020;
 <details>
 <summary><strong>📌 Range 파티셔닝 후</strong></summary>
 
-![스크린샷 2025-07-11 104019.png](attachment:60a9cc8e-5d18-4c55-a635-d80b7dcdf64c)
+<img width="925" height="239" alt="Image" src="https://github.com/user-attachments/assets/91096db0-4bc6-46ca-aace-760db8fef92c" />
 
 ⏱ 실행 시간: **0.739초**
 
@@ -193,7 +193,7 @@ WHERE year = 2020;
 <details>
 <summary><strong>📌 Hash 파티셔닝 후</strong></summary>
 
-![image.png](attachment:9d6b5e01-e74e-4670-89d4-0529eb6de2e1)
+<img width="962" height="264" alt="Image" src="https://github.com/user-attachments/assets/d44394a3-fcf7-4330-9969-a3b4f35f9827" />
 
 ⏱ 실행 시간: **1.052초**
 
@@ -219,7 +219,7 @@ WHERE region = '경기도';
 <details>
 <summary><strong>📌 파티셔닝 전</strong></summary>
 
-![1. 비파티셔닝.png](attachment:dd9b64a8-1d72-4687-9b1b-618c73046a74)
+<img width="988" height="265" alt="Image" src="https://github.com/user-attachments/assets/4548624d-3358-4345-af68-34a6fd91bccf" />
 
 ⏱ 실행 시간: **3.805초**
 
@@ -228,7 +228,7 @@ WHERE region = '경기도';
 <details>
 <summary><strong>📌 List 파티셔닝 후</strong></summary>
 
-![2. 파티셔닝 후.png](attachment:3f20a4e0-d594-40aa-8754-8cec6506747a)
+<img width="995" height="265" alt="Image" src="https://github.com/user-attachments/assets/585bfbc7-1b3f-486e-ace5-90d675a8f9eb" />
 
 ⏱ 실행 시간: **1.645초**
 
@@ -237,7 +237,7 @@ WHERE region = '경기도';
 <details>
 <summary><strong>📌 Hash 파티셔닝 후</strong></summary>
 
-![image.png](attachment:3a3eb1c5-7244-4f1f-a7d9-0c9b53e04cf1)
+<img width="964" height="238" alt="Image" src="https://github.com/user-attachments/assets/76df522d-cc9b-42f5-9872-d042396bd693" />
 
 ⏱ 실행 시간: **1.782초**
 
@@ -258,7 +258,7 @@ ORDER BY year, cases DESC;
 <details>
 <summary><strong>📌 파티셔닝 전</strong></summary>
 
-![image.png](attachment:f2f5d227-fbd6-41be-b2ff-15009610324a)
+<img width="1061" height="239" alt="Image" src="https://github.com/user-attachments/assets/52618a40-db48-4b75-8a3b-05f4776ebfd9" />
 
 ⏱ 실행 시간: **2.337초**
 
@@ -267,7 +267,7 @@ ORDER BY year, cases DESC;
 <details>
 <summary><strong>📌 Range 파티셔닝 후</strong></summary>
 
-![image.png](attachment:2578bb3e-0e59-4422-9ccc-9bfbaab64056)
+<img width="1162" height="246" alt="Image" src="https://github.com/user-attachments/assets/ab6a5d0a-4535-41dc-8348-45560b9dc5b6" />
 
 ⏱ 실행 시간: **0.583초**
 
@@ -276,7 +276,7 @@ ORDER BY year, cases DESC;
 <details>
 <summary><strong>📌 List 파티셔닝 후</strong></summary>
 
-![4. range용 파티셔닝 테스트.png](attachment:99a0d0d3-a4c5-43e3-851d-ebd04bfca33b)
+<img width="987" height="263" alt="Image" src="https://github.com/user-attachments/assets/8da00332-16f3-4b08-b733-f12308b63188" />
 
 ⏱ 실행 시간: **0.886초**
 
@@ -285,7 +285,7 @@ ORDER BY year, cases DESC;
 <details>
 <summary><strong>📌 Hash 파티셔닝 후</strong></summary>
 
-![image.png](attachment:c92da98e-9596-4dc7-a491-4032aed1a6cb)
+<img width="971" height="241" alt="Image" src="https://github.com/user-attachments/assets/9b700f55-513d-4c21-b690-a41c2b66e9d0" />
 
 ⏱ 실행 시간: **0.479초**
 
@@ -311,7 +311,7 @@ ORDER BY total_damage DESC;
 <details>
 <summary><strong>📌 파티셔닝 전</strong></summary>
 
-![image.png](attachment:9769728d-6897-42ee-8441-6489f22b824c)
+<img width="1064" height="211" alt="Image" src="https://github.com/user-attachments/assets/f1fc7e70-9ee9-455e-82b6-70a9982ba70c" />
 
 ⏱ 실행 시간: **2.183초**
 
@@ -320,7 +320,7 @@ ORDER BY total_damage DESC;
 <details>
 <summary><strong>📌 Range 파티셔닝 후</strong></summary>
 
-![image.png](attachment:a6b7720c-780a-4092-b9bf-ef9f1d64863e)
+<img width="1060" height="237" alt="Image" src="https://github.com/user-attachments/assets/634bc6de-f65f-4b38-8a80-af48e4cff044" />
 
 ⏱ 실행 시간: **2.029초**
 
@@ -329,7 +329,7 @@ ORDER BY total_damage DESC;
 <details>
 <summary><strong>📌 List 파티셔닝 후</strong></summary>
 
-![5. list용 파티셔닝 테스트.png](attachment:fe3b42d2-ce84-457c-b474-e2b7e83c40d3)
+<img width="983" height="270" alt="Image" src="https://github.com/user-attachments/assets/8e1e5486-a61d-44a6-837b-e8119346614d" />
 
 ⏱ 실행 시간: **0.710초**
 
@@ -338,7 +338,7 @@ ORDER BY total_damage DESC;
 <details>
 <summary><strong>📌 Hash 파티셔닝 후</strong></summary>
 
-![image.png](attachment:99c0c73b-500e-4917-96fd-d15eb0aff3f6)
+<img width="962" height="234" alt="Image" src="https://github.com/user-attachments/assets/e89bab80-739a-4feb-9cb3-41a15697d130" />
 
 ⏱ 실행 시간: **0.880초**
 
