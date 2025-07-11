@@ -1,12 +1,14 @@
 # 대용량 데이터를 활용한 RDBMS 파티셔닝 프로젝트
 
-대용량 데이터를 처리할 떄 쿼리의 처리 속도에 파티셔닝이 미치는 영향을 분석한 프로젝트입니다.
+**가상의 보이스피싱 신고 데이터를 활용한** 파티셔닝 전략에 따른 대용량 데이터의 쿼리 실행 속도 분석을 위한 프로젝트입니다.
 
 ## 👥 팀 소개
 | <img width="150px" src="https://avatars.githubusercontent.com/u/52108628?v=4"/>  | <img width="150px" src="https://avatars.githubusercontent.com/u/45265805?v=4"/> | <img width="150px" src="https://avatars.githubusercontent.com/u/81912226?v=4"> | <img width="150px" src="https://avatars.githubusercontent.com/u/188286798?v=4"> | 
 | :---: | :---: | :---: | :---: |
 | **고태우**    | **박지원**        | **정서현**        | **황지환**        | 
 | [@kohtaewoo](https://github.com/kohtaewoo) | [@bbo9866](https://github.com/bbo9866) | [@hyunn522](https://github.com/hyunn522) | [@jihwan77](https://github.com/jihwan77) |
+
+<br/> 
 
 ## 📌 파티셔닝이란?
 
@@ -59,9 +61,15 @@
 
 - `MySQL` : v8.0.42
 
-- `Prometheus` : 
+- `Prometheus`
+ 	- v2.48.0
+    
+  	- 매트릭 정보를 수집하여 쿼리 결과만이 아닌 쿼리 속도나 연결 수 네트워크 사용량, 자원 사용량 등의 더 자세한 정보를 시각화하기 위해 사용
 
-- `Grafana` : 
+- `Grafana`
+  	- v12.0.2
+  	  
+  	- mysql에서의 쿼리 결과물을 시각화 하기 위해 사용
 
 ## 💻 실행 플로우
 
@@ -419,24 +427,45 @@ WHERE year = 2020
   AND region IN ('서울특별시', '경기도');
 ```
 
-✅ 이 경우는 `year`(RANGE) + `region`(LIST)의 **교집합 조건**을 사용하기 때문에,  
-단일 파티션 조건일 때보다 큰 성능 차이가 나지 않음.
+`year`(RANGE) + `region`(LIST)의 **교집합 조건**을 사용하기 때문에, 단일 파티션 조건일 때보다 큰 성능 차이가 나지 않습니다.
 
-→ 두 개 이상의 파티션 키를 쓰는 경우, **서로의 파티션 범위를 먼저 탐색한 뒤 조합**을 찾는 방식이라  
-**Range와 List의 성능 차이가 줄어드는 것**이 특징이다.
-
+→ 두 개 이상의 파티션 키를 쓰는 경우, **서로의 파티션 범위를 먼저 탐색한 뒤 조합**을 찾는 방식이라 **Range와 List의 성능 차이가 줄어드는 것**
 
 ## 💡 인사이트
 
-
+1. 분석 목적에 따라 파티셔닝 전략이 달라야 함
+   
+2. 테이블 용량이 커질수록 파티셔닝 효과가 두드러짐
+   
+3. 쿼리 성능은 **조건에 파티션 키가 포함될 때**만 향상됨
+   
+4. Grafana만으로는 커넥션 및 트랜잭션 상태, 쿼리 속도를 수집하지 못함
 
 ## 🚀 트러블슈팅
 
-3. SELECT 쿼리 캐싱 현상
+### 파티셔닝
 
-문제 : `SELECT`문을 반복 실행하면 동일한 쿼리에 대해 **쿼리 캐시(Query Cache)**가 적용되어 실행 시간이 실제 시간보다 적게 걸리는 현상
+1. **MySQL에서 연관 관계의 테이블 2개에 대해 파티셔닝 불가능**
 
-해결책 : **`SQL_NO_CACHE`** 키워드를 사용하여 쿼리 캐싱 없이 실행 가능
+- 문제 : 참조 무결성 유지 로직이 파티셔닝 엔진과 충돌하기 때문에 여러 테이블들에 대해 파티셔닝 불가능. 연관 관계에 있는 테이블에 대해서 전체 테이블 단위로 외래키 검증이 수행되어야 한다.
+
+	그러나 MySQL의 파티셔닝 엔진은 각 파티션을 독립적으로 관리하므로 외래키 제약 조건을 지원할 수 없다.
+
+- 해결책 : 기존 테이블을 2개에서 1개로 통합
+
+2. **이미 생성된 테이블에 대해 파티션 추가 불가**
+
+- 문제 : CREATE로 생성한 테이블에 대해 ALTER로 파티션 추가 불가
+
+- 원인 : MySQL의 RANGE, LIST 파티셔닝은 정적 방식으로 이루어진다. 따라서 파티셔닝 후 동적으로 파티션을 추가할 수 없다.
+
+- 해결책 : 파티셔닝 테이블 생성 시 파티셔닝을 함께 수행하고 원본 테이블에서 데이터 복사
+
+3. **SELECT 쿼리 캐싱 현상**
+
+- 문제 : `SELECT`문을 반복 실행하면 동일한 쿼리에 대해 **쿼리 캐시**가 적용되어 실행 시간이 실제 시간보다 적게 걸리는 현상
+
+- 해결책 : **`SQL_NO_CACHE`** 키워드를 사용하여 쿼리 캐싱 없이 실행 가능
 
 ```sql
 SELECT *  
@@ -445,4 +474,55 @@ WHERE region = '서울특별시';
 ```
 
 위 쿼리를 예시로 들자면, `SQL_NO_CACHE` 키워드를 추가하지 않으면 실행 시간이 점차 줄어들어 5번째 실행 시 0.645초가 기록되었다. 반면 `SQL_NO_CACHE` 키워드를 추가하면 모든 실행에서 약 1.14초대로 기록되었다. 
+
+### Promethemus 연동
+
+- 원인 : `mysqld_exporter` 실행 시 다음 오류 발생:
+    
+    ```
+    failed to validate config" section=client err="no user specified in section or parent"
+    Error parsing host config" file=.my.cnf err="no configuration found"
+    
+    ```
+    
+    서비스가 `Active: failed (Result: exit-code)`로 구동되지 않음.
+
+- 해결책 :
+  	### **`EnvironmentFile` 방식**
+
+	**설정 경로:**
+	
+	```bash
+	/etc/default/mysqld_exporter
+	```
+	
+	**수정 내용:**
+	
+	```bash
+	DATA_SOURCE_NAME="exporter:MyStrongPassword@(localhost:3306)/"
+	```
+	
+	- `MyStrongPassword` = MySQL에 생성한 exporter 계정의 비밀번호
+	
+	```bash
+	sudo chmod 600 /etc/default/mysqld_exporter
+	```
+	
+	**systemd 서비스 예시:**
+	
+	```bash
+	[Unit]
+	Description=Prometheus MySQL Exporter
+	After=network.target
+	
+	[Service]
+	User=mysqld_exporter
+	EnvironmentFile=/etc/default/mysqld_exporter
+	ExecStart=/usr/local/bin/mysqld_exporter
+	
+	[Install]
+	WantedBy=default.target
+	```
+	
+	**서비스 재시작:**
 
