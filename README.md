@@ -567,5 +567,7 @@ WHERE region = '서울특별시';
 	   ▼
 	[Grafana]
 	```
-	
+
+	<img width="1867" height="1012" alt="image" src="https://github.com/user-attachments/assets/c66c10b1-9baa-4a9f-ae64-2c7b7981a333" />
+
 	</details>
