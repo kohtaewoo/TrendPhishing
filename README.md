@@ -155,7 +155,7 @@ WHERE region IN (
 
 ---
 
-### 1. List Partitioning
+### 3. Hash Partitioning
 
 다음 쿼리문을 통해 지역에 따라 리스트 파티션을 진행하였습니다.
 
@@ -191,7 +191,7 @@ FROM INFORMATION_SCHEMA.PARTITIONS
 WHERE TABLE_NAME = 'phishing_range_partitioned';
 ```
 
-생성된 리스트 파티션을 확인하면 다음과 같다.
+생성된 해쉬 파티션을 확인하면 다음과 같다.
 
 <img width="558" height="229" alt="Image" src="https://github.com/user-attachments/assets/2d46b862-6c2b-4f80-9c7b-352c0134c31e" />
 
