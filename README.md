@@ -534,3 +534,38 @@ WHERE region = '서울특별시';
 	
 	**서비스 재시작:**
 
+ 	```bash
+	sudo systemctl daemon-reload
+	sudo systemctl restart mysqld_exporter
+	sudo systemctl status mysqld_exporter
+	```
+
+	<details><summary>모니터링 아키텍처 구조</summary>
+	
+	```bash
+	[MySQL Server]
+	   │
+	   │ (MySQL 프로세스)
+	   │
+	[mysqld_exporter]
+	   │
+	   │ (Metrics HTTP Endpoint :9104)
+	   │
+	[Prometheus]
+	   │
+	   │ (scrape: 5초마다 수집)
+	   │
+	[Grafana]
+	```
+	
+	구현한 모니터링 아키텍처 구조
+	
+	```
+	[MySQL Server]
+	   ▲
+	   │ (쿼리 실행: SELECT ...)
+	   ▼
+	[Grafana]
+	```
+	
+	</details>
