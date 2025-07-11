@@ -157,7 +157,7 @@ WHERE region IN (
 
 ### 3. Hash Partitioning
 
-다음 쿼리문을 통해 지역에 따라 리스트 파티션을 진행하였습니다.
+다음 쿼리문을 통해 report_id에 따라 해쉬 파티션을 진행하였습니다.
 
 ```sql
 CREATE TABLE phishing_hash_partitioned (
