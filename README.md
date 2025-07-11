@@ -291,6 +291,17 @@ ORDER BY year, cases DESC;
 
 </details>
 
+<details>
+<summary><strong>최근 3년 (2022~2024년) 중 5000만 원 이상 피해 사건만 시각화</strong></summary>
+
+<img width="751" height="372" alt="Image" src="https://github.com/user-attachments/assets/091c92e9-9b14-48de-81e0-9741f602645f" />
+
+<img width="1067" height="357" alt="Image" src="https://github.com/user-attachments/assets/c15538cc-511c-4a32-a437-d0cc7757a2a3" />
+
+<img width="1069" height="359" alt="Image" src="https://github.com/user-attachments/assets/14121b9a-82fc-4170-8863-0ddd672e0fbd" />
+
+</details>
+
 ---
 
 #### 4. 40대 이상 수도권 대상, 피해 합계/평균 집계
@@ -341,6 +352,17 @@ ORDER BY total_damage DESC;
 <img width="962" height="234" alt="Image" src="https://github.com/user-attachments/assets/e89bab80-739a-4feb-9cb3-41a15697d130" />
 
 ⏱ 실행 시간: **0.880초**
+
+</details>
+
+<details>
+<summary><strong>40대 이상이고, 수도권의 피해 금액 합계 및 평균을 지역별 시각화</strong></summary>
+
+<img width="1119" height="511" alt="Image" src="https://github.com/user-attachments/assets/47874256-25a2-4791-9ca4-8a0202a2ad51" />
+
+<img width="1092" height="385" alt="Image" src="https://github.com/user-attachments/assets/dfaaab2f-5371-4529-9fe8-ccfd8162ef7b" />
+
+<img width="1099" height="393" alt="Image" src="https://github.com/user-attachments/assets/e2b67061-fd09-435e-83a8-2ed9a909b815" />
 
 </details>
 
