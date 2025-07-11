@@ -155,7 +155,49 @@ WHERE region IN (
 
 ---
 
-### 3. 파티셔닝 여부에 따른 성능 비교
+### 1. List Partitioning
+
+다음 쿼리문을 통해 지역에 따라 리스트 파티션을 진행하였습니다.
+
+```sql
+CREATE TABLE phishing_hash_partitioned (
+  report_id INT NOT NULL,
+  type VARCHAR(20),
+  method VARCHAR(20),
+  damage_amount INT,
+  year INT,
+  month INT,
+  age INT,
+  gender VARCHAR(20),
+  region VARCHAR(20),
+  phishing_value VARCHAR(50),
+  PRIMARY KEY (report_id)
+)
+PARTITION BY HASH (report_id)
+PARTITIONS 8;
+
+INSERT INTO phishing_hash_partitioned
+SELECT DISTINCT
+  report_id, type, method, damage_amount, year,
+  month, age, gender, region, phishing_value
+FROM phishing_report;
+
+-- 년도별 파티션 테이블 확인
+SELECT
+  TABLE_NAME,
+  PARTITION_NAME,
+  TABLE_ROWS
+FROM INFORMATION_SCHEMA.PARTITIONS
+WHERE TABLE_NAME = 'phishing_range_partitioned';
+```
+
+생성된 리스트 파티션을 확인하면 다음과 같다.
+
+<img width="558" height="229" alt="Image" src="https://github.com/user-attachments/assets/2d46b862-6c2b-4f80-9c7b-352c0134c31e" />
+
+---
+
+### 4. 파티셔닝 여부에 따른 성능 비교
 
 #### 1. 파티셔닝 기준 칼럼을 조건으로 검색
 
