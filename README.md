@@ -86,51 +86,6 @@
 다음 쿼리문을 통해 지역에 따라 리스트 파티션을 진행하였습니다.
 
 ```sql
-CREATE TABLE phishing_range_partitioned(
-	report_id int,
-	type varchar(20),
-	method varchar(20),
-	damage_amount int,
-	year int,
-	month int,
-	age int,
-	gender varchar(20),
-	region varchar(20),
-	phishing_value varchar(50),
-	primary key (report_id, year)
-)
-partition by range (year) (
-
-	partition p2018 values less than (2018),
-	partition p2019 values less than (2019),
-	partition p2020 values less than (2020),
-	partition p2021 values less than (2021),
-	partition p2022 values less than (2022),
-	partition p2023 values less than (2023),
-	partition p2024 values less than (2024),
-	partition pmax values less than (MAXVALUE)
-);
-
--- 년도별 파티션 테이블 확인
-SELECT
-  TABLE_NAME,
-  PARTITION_NAME,
-  TABLE_ROWS
-FROM INFORMATION_SCHEMA.PARTITIONS
-WHERE TABLE_NAME = 'phishing_range_partitioned';
-```
-
-생성된 리스트 파티션을 확인하면 다음과 같습니다.
-
-<img width="594" height="287" alt="image" src="https://github.com/user-attachments/assets/bf78962c-1713-4c93-b8de-1ca758654dbe" />
-
----
-
-### 2. Range Partitioning
-
-다음 쿼리문을 통해 연도에 따라 Range Partitioning을 진행하였습니다.
-
-```sql
 CREATE TABLE phishing_list_partitioning (
     report_id INT,
     type VARCHAR(20),
@@ -163,6 +118,51 @@ WHERE region IN (
     '서울특별시', '경기도', '인천광역시', '충청북도', '충청남도',
     '전라북도', '전라남도', '경상북도', '경상남도', '제주특별시'
 );
+```
+
+생성된 리스트 파티션을 확인하면 다음과 같습니다.
+
+<img width="594" height="287" alt="image" src="https://github.com/user-attachments/assets/bf78962c-1713-4c93-b8de-1ca758654dbe" />
+
+---
+
+### 2. Range Partitioning
+
+다음 쿼리문을 통해 연도에 따라 Range Partitioning을 진행하였습니다.
+
+```sql
+CREATE TABLE phishing_range_partitioned(
+	report_id int,
+	type varchar(20),
+	method varchar(20),
+	damage_amount int,
+	year int,
+	month int,
+	age int,
+	gender varchar(20),
+	region varchar(20),
+	phishing_value varchar(50),
+	primary key (report_id, year)
+)
+partition by range (year) (
+
+	partition p2018 values less than (2018),
+	partition p2019 values less than (2019),
+	partition p2020 values less than (2020),
+	partition p2021 values less than (2021),
+	partition p2022 values less than (2022),
+	partition p2023 values less than (2023),
+	partition p2024 values less than (2024),
+	partition pmax values less than (MAXVALUE)
+);
+
+-- 년도별 파티션 테이블 확인
+SELECT
+  TABLE_NAME,
+  PARTITION_NAME,
+  TABLE_ROWS
+FROM INFORMATION_SCHEMA.PARTITIONS
+WHERE TABLE_NAME = 'phishing_range_partitioned';
 ```
 
 생성된 레인지 파티션을 확인하면 다음과 같습니다.
