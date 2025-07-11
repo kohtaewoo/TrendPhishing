@@ -157,6 +157,211 @@ WHERE region IN (
 
 ### 3. 파티셔닝 여부에 따른 성능 비교
 
+#### 1. 파티셔닝 기준 칼럼을 조건으로 검색
+
+```sql
+-- Range 파티셔닝
+-- 파티셔닝 전
+SELECT SQL_NO_CACHE * 
+FROM phishing_report 
+WHERE year = 2020;
+
+-- 파티셔닝 후
+SELECT SQL_NO_CACHE * 
+FROM phishing_range_partitioned
+WHERE year = 2020;
+```
+
+<details>
+<summary><strong>📌 파티셔닝 전</strong></summary>
+
+![스크린샷 2025-07-11 103950.png](attachment:9b1605d4-38a9-42c9-aca5-89f4208466c6)
+
+⏱ 실행 시간: **1.731초**
+
+</details>
+
+<details>
+<summary><strong>📌 Range 파티셔닝 후</strong></summary>
+
+![스크린샷 2025-07-11 104019.png](attachment:60a9cc8e-5d18-4c55-a635-d80b7dcdf64c)
+
+⏱ 실행 시간: **0.739초**
+
+</details>
+
+<details>
+<summary><strong>📌 Hash 파티셔닝 후</strong></summary>
+
+![image.png](attachment:9d6b5e01-e74e-4670-89d4-0529eb6de2e1)
+
+⏱ 실행 시간: **1.052초**
+
+</details>
+
+---
+
+#### 2. 지역(region) 기준으로 검색 (List 파티셔닝 vs Hash)
+
+```sql
+-- List 파티셔닝
+-- 파티셔닝 전
+SELECT SQL_NO_CACHE * 
+FROM phishing_report
+WHERE region = '경기도';
+
+-- 파티셔닝 후
+SELECT SQL_NO_CACHE *
+FROM list_partitioned2
+WHERE region = '경기도';
+```
+
+<details>
+<summary><strong>📌 파티셔닝 전</strong></summary>
+
+![1. 비파티셔닝.png](attachment:dd9b64a8-1d72-4687-9b1b-618c73046a74)
+
+⏱ 실행 시간: **3.805초**
+
+</details>
+
+<details>
+<summary><strong>📌 List 파티셔닝 후</strong></summary>
+
+![2. 파티셔닝 후.png](attachment:3f20a4e0-d594-40aa-8754-8cec6506747a)
+
+⏱ 실행 시간: **1.645초**
+
+</details>
+
+<details>
+<summary><strong>📌 Hash 파티셔닝 후</strong></summary>
+
+![image.png](attachment:3a3eb1c5-7244-4f1f-a7d9-0c9b53e04cf1)
+
+⏱ 실행 시간: **1.782초**
+
+</details>
+
+---
+
+#### 3. 최근 3년(2022~2024), 피해금액 5000만 원 이상 필터
+
+```sql
+SELECT SQL_NO_CACHE year, region, COUNT(*) AS cases, AVG(damage_amount) AS avg_damage
+FROM phishing_report
+WHERE year >= 2022 AND damage_amount >= 5000
+GROUP BY year, region
+ORDER BY year, cases DESC;
+```
+
+<details>
+<summary><strong>📌 파티셔닝 전</strong></summary>
+
+![image.png](attachment:f2f5d227-fbd6-41be-b2ff-15009610324a)
+
+⏱ 실행 시간: **2.337초**
+
+</details>
+
+<details>
+<summary><strong>📌 Range 파티셔닝 후</strong></summary>
+
+![image.png](attachment:2578bb3e-0e59-4422-9ccc-9bfbaab64056)
+
+⏱ 실행 시간: **0.583초**
+
+</details>
+
+<details>
+<summary><strong>📌 List 파티셔닝 후</strong></summary>
+
+![4. range용 파티셔닝 테스트.png](attachment:99a0d0d3-a4c5-43e3-851d-ebd04bfca33b)
+
+⏱ 실행 시간: **0.886초**
+
+</details>
+
+<details>
+<summary><strong>📌 Hash 파티셔닝 후</strong></summary>
+
+![image.png](attachment:c92da98e-9596-4dc7-a491-4032aed1a6cb)
+
+⏱ 실행 시간: **0.479초**
+
+</details>
+
+---
+
+#### 4. 40대 이상 수도권 대상, 피해 합계/평균 집계
+
+```sql
+SELECT SQL_NO_CACHE
+    region,
+    COUNT(*) AS case_count,
+    SUM(damage_amount) AS total_damage,
+    ROUND(AVG(damage_amount), 2) AS avg_damage
+FROM phishing_report
+WHERE age >= 40
+  AND region IN ('서울특별시', '경기도', '인천광역시')
+GROUP BY region
+ORDER BY total_damage DESC;
+```
+
+<details>
+<summary><strong>📌 파티셔닝 전</strong></summary>
+
+![image.png](attachment:9769728d-6897-42ee-8441-6489f22b824c)
+
+⏱ 실행 시간: **2.183초**
+
+</details>
+
+<details>
+<summary><strong>📌 Range 파티셔닝 후</strong></summary>
+
+![image.png](attachment:a6b7720c-780a-4092-b9bf-ef9f1d64863e)
+
+⏱ 실행 시간: **2.029초**
+
+</details>
+
+<details>
+<summary><strong>📌 List 파티셔닝 후</strong></summary>
+
+![5. list용 파티셔닝 테스트.png](attachment:fe3b42d2-ce84-457c-b474-e2b7e83c40d3)
+
+⏱ 실행 시간: **0.710초**
+
+</details>
+
+<details>
+<summary><strong>📌 Hash 파티셔닝 후</strong></summary>
+
+![image.png](attachment:99c0c73b-500e-4917-96fd-d15eb0aff3f6)
+
+⏱ 실행 시간: **0.880초**
+
+</details>
+
+---
+
+#### 5. AND 조건: 파티셔닝 칼럼 2개 결합
+
+```sql
+SELECT *
+FROM phishing_report
+WHERE year = 2020
+  AND region IN ('서울특별시', '경기도');
+```
+
+✅ 이 경우는 `year`(RANGE) + `region`(LIST)의 **교집합 조건**을 사용하기 때문에,  
+단일 파티션 조건일 때보다 큰 성능 차이가 나지 않음.
+
+→ 두 개 이상의 파티션 키를 쓰는 경우, **서로의 파티션 범위를 먼저 탐색한 뒤 조합**을 찾는 방식이라  
+**Range와 List의 성능 차이가 줄어드는 것**이 특징이다.
+
+
 ## 💡 인사이트
 
 
